@@ -48,7 +48,7 @@ public class BotConfig
             ytPoToken, ytVisitorData, evalEngine;
     private YouTubeUtil.RoutingPlanner ytRoutingPlanner;
     private List<IpBlock> ytIpBlocks;
-    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
+    private boolean stayInChannel, songInGame, npImages, updatecheck, updatealerts, useEval, dbots;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private int maxYTPlaylistPages;
     private double skipratio;
@@ -93,6 +93,7 @@ public class BotConfig
             stayInChannel = config.getBoolean("stayinchannel");
             songInGame = config.getBoolean("songinstatus");
             npImages = config.getBoolean("npimages");
+            updatecheck = config.getBoolean("updatecheck");
             updatealerts = config.getBoolean("updatealerts");
             logLevel = config.getString("loglevel");
             useEval = config.getBoolean("eval");
@@ -321,6 +322,11 @@ public class BotConfig
     public boolean getDBots()
     {
         return dbots;
+    }
+
+    public boolean checkForUpdates()
+    {
+        return updatecheck;
     }
     
     public boolean useUpdateAlerts()

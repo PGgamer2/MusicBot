@@ -167,12 +167,12 @@ public class OtherUtil
         String latestJagrosh = getLatestVersion("jagrosh");
         String latestSeVile = getLatestVersion("SeVile");
         
-        boolean isSeVileVersion = version.toLowerCase().contains("sevile");
+        boolean isSeVileVersion = true;
         
         if (isSeVileVersion) {
-            if (latestJagrosh != null && compareVersions(latestJagrosh, "0.4.4") > 0) {
+            if (latestSeVile != null && compareVersions(latestSeVile, version) > 0) {
                 prompt.alert(Prompt.Level.WARNING, "JMusicBot Version", 
-                    String.format(NEW_VERSION_AVAILABLE, version, latestJagrosh));
+                    String.format(NEW_VERSION_AVAILABLE, version, latestSeVile));
             }
         } else {
             if (latestJagrosh != null && !latestJagrosh.equals(version)) {
@@ -187,7 +187,7 @@ public class OtherUtil
         if(JMusicBot.class.getPackage()!=null && JMusicBot.class.getPackage().getImplementationVersion()!=null)
             return JMusicBot.class.getPackage().getImplementationVersion();
         else
-            return "UNKNOWN";
+            return "0.0.0.0";
     }
     
     public static String getLatestVersion(String repoOwner) {

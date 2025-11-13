@@ -72,16 +72,17 @@ public class JMusicBot
         // create prompt to handle startup
         Prompt prompt = new Prompt("JMusicBot");
         
-        // startup checks
-        OtherUtil.checkVersion(prompt);
-        OtherUtil.checkJavaVersion(prompt);
-        
         // load config
         BotConfig config = new BotConfig(prompt);
         config.load();
         if(!config.isValid())
             return;
         LOG.info("Loaded config from " + config.getConfigLocation());
+
+        // startup checks
+        if (config.checkForUpdates())
+            OtherUtil.checkVersion(prompt);
+        OtherUtil.checkJavaVersion(prompt);
 
         // set log level from config
         if (LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) instanceof ch.qos.logback.classic.Logger)
