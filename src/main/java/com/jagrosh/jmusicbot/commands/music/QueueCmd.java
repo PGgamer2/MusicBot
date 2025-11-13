@@ -29,10 +29,10 @@ import com.jagrosh.jmusicbot.settings.Settings;
 import com.jagrosh.jmusicbot.utils.FormatUtil;
 import com.jagrosh.jmusicbot.utils.TimeUtil;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
-import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
-
 
 /**
  *
@@ -53,7 +53,7 @@ public class QueueCmd extends MusicCommand
         this.botPermissions = new Permission[]{Permission.MESSAGE_ADD_REACTION,Permission.MESSAGE_EMBED_LINKS};
         builder = new Paginator.Builder()
                 .setColumns(1)
-                .setFinalAction(m -> {try{m.clearReactions().queue();}catch(InsufficientPermissionException ignore){}})
+                .setFinalAction(m -> {try{m.clearReactions().queue();}catch(PermissionException ignore){}})
                 .setItemsPerPage(10)
                 .waitOnSinglePage(false)
                 .useNumberedItems(true)
@@ -81,7 +81,7 @@ public class QueueCmd extends MusicCommand
             MessageCreateData built = new MessageCreateBuilder()
                     .setContent(event.getClient().getWarning() + " There is no music in the queue!")
                     .setEmbeds((nowp==null ? nonowp : nowp).getEmbeds().get(0)).build();
-            event.reply(built, m -> 
+            event.reply(built, m ->
             {
                 if(nowp!=null)
                     bot.getNowplayingHandler().setLastNPMessage(m);

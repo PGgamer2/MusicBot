@@ -79,10 +79,10 @@ public class DebugCmd extends OwnerCommand
                 .append("\n  Users = ").append(event.getJDA().getUserCache().size());
         sb.append("\n```");
         
-        if(event.isFromType(ChannelType.PRIVATE) 
+        if(event.isFromType(ChannelType.PRIVATE)
                 || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
             event.getChannel().sendFiles(FileUpload.fromData(sb.toString().getBytes(), "debug_information.txt")).queue();
         else
-            event.reply("Debug Information: " + sb);
+            event.reply("Debug Information: " + sb.toString());
     }
 }

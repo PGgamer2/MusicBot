@@ -94,10 +94,9 @@ public class Listener extends ListenerAdapter
             }, 0, 24, TimeUnit.HOURS);
         }
     }
-    
+
     @Override
-    public void onMessageDelete(MessageDeleteEvent event)
-    {
+    public void onMessageDelete(@NotNull MessageDeleteEvent event) {
         bot.getNowplayingHandler().onMessageDelete(event.getGuild(), event.getMessageIdLong());
     }
 

@@ -23,7 +23,7 @@ import com.jagrosh.jmusicbot.audio.AudioHandler;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.AudioChannel;
+import net.dv8tion.jda.api.entities.channel.unions.AudioChannelUnion;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 
 /**
@@ -65,7 +65,10 @@ public abstract class MusicCommand extends Command
         }
         if(beListening)
         {
-            AudioChannel current = event.getGuild().getSelfMember().getVoiceState().getChannel();
+            AudioChannelUnion audioChannelUnion = event.getGuild().getSelfMember().getVoiceState().getChannel();
+            VoiceChannel current = null;
+            if (audioChannelUnion != null)
+                current = audioChannelUnion.asVoiceChannel();
             if(current==null)
                 current = settings.getVoiceChannel(event.getGuild());
             GuildVoiceState userState = event.getMember().getVoiceState();
