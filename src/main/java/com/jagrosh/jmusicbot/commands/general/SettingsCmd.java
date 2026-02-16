@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import net.dv8tion.jda.api.interactions.InteractionContextType;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 /**
@@ -41,7 +42,7 @@ public class SettingsCmd extends Command
         this.name = "settings";
         this.help = "shows the bots settings";
         this.aliases = bot.getConfig().getAliases(this.name);
-        this.guildOnly = true;
+        this.contexts = new InteractionContextType[]{InteractionContextType.GUILD};
     }
     
     @Override
