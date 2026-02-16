@@ -1,7 +1,7 @@
 ## Unofficial JMusicBot update with built-in Docker script (Forked from: https://github.com/jagrosh/MusicBot)
 
 > [!IMPORTANT]
-> This version has a built-in Docker script ([youtube-trusted-session-generator](https://github.com/iv-org/youtube-trusted-session-generator)) that enters po_token and visitor_data automatically into the _tokens.txt_ (file creates with first launch) file each time the bot is launched. 
+> This version has a built-in Docker script ([BgUtils POT Provider](https://github.com/jim60105/bgutil-ytdlp-pot-provider-rs)) that enters po_token and visitor_data automatically into the _tokens.txt_ (file creates with first launch) file each time the bot is launched. 
 > For proper operation you need **Docker** installed and **_running_** on your device.
 
 <img width="887" alt="Zrzut ekranu 2024-12-26 o 18 57 45" src="https://github.com/user-attachments/assets/e66d1fb3-3301-4c98-a44b-d521c0940dac" />

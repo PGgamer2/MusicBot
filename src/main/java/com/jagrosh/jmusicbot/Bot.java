@@ -29,6 +29,9 @@ import java.util.Objects;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import okhttp3.*;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 /* */
 import java.io.*;
 import java.nio.file.*;
@@ -174,30 +177,37 @@ public class Bot
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String currentTime = sdf.format(new Date());
 
+        Process process = null;
         try {
-            Process process = new ProcessBuilder("docker", "run", "quay.io/invidious/youtube-trusted-session-generator")
+            process = new ProcessBuilder("docker", "run", "-p", "4416:4416", "quay.io/jim60105/bgutil-pot")
                     .redirectErrorStream(true)
                     .start();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder output = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
+                if (line.contains("listening")) break;
             }
-            process.waitFor();
 
-            String dockerOutput = output.toString();
-            Pattern poTokenPattern = Pattern.compile("po_token:\\s*([^\\s]+)");
-            Pattern visitorDataPattern = Pattern.compile("visitor_data:\\s*([^\\s]+)");
+            String poToken = null;
+            String visitorData = null;
+            Response response = new OkHttpClient.Builder().build()
+                    .newCall(new Request.Builder().get()
+                            .url("http://127.0.0.1:4416/get_pot").post(RequestBody.create("{}", MediaType.parse("application/json"))).build())
+                    .execute();
+            ResponseBody body = response.body();
+            if (body != null) {
+                try (Reader resreader = body.charStream()) {
+                    JSONObject obj = new JSONObject(new JSONTokener(resreader));
+                    poToken = obj.getString("poToken");
+                    visitorData = obj.getString("contentBinding");
+                } finally {
+                    response.close();
+                }
+            }
+            process.destroy();
 
-            Matcher poTokenMatcher = poTokenPattern.matcher(dockerOutput);
-            Matcher visitorDataMatcher = visitorDataPattern.matcher(dockerOutput);
-
-            if (poTokenMatcher.find() && visitorDataMatcher.find()) {
-                String poToken = poTokenMatcher.group(1);
-                String visitorData = visitorDataMatcher.group(1);
-
+            if (poToken != null && !poToken.isEmpty() && visitorData != null && !visitorData.isEmpty()) {
                 Path tokensFilePath = Paths.get("tokens.txt");
                 String tokenData = "ytpotoken=" + poToken + "\nytvisitordata=" + visitorData;
 
@@ -211,6 +221,8 @@ public class Bot
                 System.err.println("[" + currentTime + "] [ERROR]: !!! ENTER MANUALLY TO TOKENS.TXT !!!");
             }
         } catch (Exception e) {
+            if (process != null && process.isAlive())
+                process.destroy();
             System.err.println("[" + currentTime + "] [ERROR]: Error while updating tokens.txt " + e.getMessage());
         }
     }
