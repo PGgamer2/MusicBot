@@ -36,21 +36,24 @@ public interface BgUtil extends Library {
             if (INSTANCE == null && isPresent == null) {
                 isPresent = false;
 
+                String libbase = "./libbgutil_ytdlp_pot_provider";
                 String libext = "-linux-.so";
                 String osname = System.getProperty("os.name").toLowerCase();
                 if (osname.contains("win")) {
+                    libbase = "./bgutil_ytdlp_pot_provider";
                     libext = "-windows-.dll";
                 } else if (osname.contains("mac")) {
                     libext = "-macos-.dylib";
                 }
 
-                String libpath = "./bgutil_ytdlp_pot_provider" + libext.replace(".", System.getProperty("os.arch") + ".");
+                String libpath = libbase + libext.replace(".", System.getProperty("os.arch") + ".");
                 if (tryInstantiate(libpath)) {
                     // x86_64 fallback
-                    libpath = "./bgutil_ytdlp_pot_provider" + libext.replace(".", "x86_64.");
+                    libpath = libbase + libext.replace(".", "x86_64.");
                     if (tryInstantiate(libpath)) {
                         // generic fallback
-                        tryInstantiate("./bgutil_ytdlp_pot_provider" + libext.substring(libext.indexOf(".")));
+                        libpath = libbase + libext.substring(libext.indexOf("."));
+                        tryInstantiate(libpath);
                     }
                 }
             }
