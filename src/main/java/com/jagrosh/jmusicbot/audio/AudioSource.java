@@ -42,7 +42,7 @@ import dev.lavalink.youtube.clients.AndroidVr;
 import dev.lavalink.youtube.clients.ClientOptions;
 import dev.lavalink.youtube.clients.MWeb;
 import dev.lavalink.youtube.clients.Tv;
-import dev.lavalink.youtube.clients.TvHtml5Embedded;
+import dev.lavalink.youtube.clients.TvHtml5Simply;
 import dev.lavalink.youtube.clients.Web;
 import dev.lavalink.youtube.clients.skeleton.Client;
 import dev.lavalink.youtube.http.YoutubeAccessTokenTracker;
@@ -300,15 +300,14 @@ public enum AudioSource
     
     /**
      * Builds the appropriate YouTube clients based on OAuth setting.
-     * 
+     *
      * <p>When OAuth is enabled, we use a combination of clients:
      * <ul>
-     *   <li><b>Web (metadata-only)</b> - Primary client for loading video metadata (direct URLs,
-     *       search, playlists). Configured with {@code playback = false} so it won't be used
-     *       for streaming. Being non-embedded, it can handle videos that reject embedded context
-     *       with "video unavailable" errors.</li>
-     *   <li><b>TvHtml5Embedded</b> - OAuth-compatible fallback for loading, primary for streaming.
-     *       Uses embedded player context which works for most videos.</li>
+     *   <li><b>AndroidVr, MWeb, Web</b> - Primary clients for loading and playback.
+     *       These clients can often play public videos without OAuth while the TV OAuth
+     *       client remains available for videos that need account context.</li>
+     *   <li><b>TvHtml5Simply</b> - fallback for loading and primary streaming client.
+     *       Replaces the retired TVHTML5 embedded client.</li>
      *   <li><b>Tv</b> - OAuth-compatible streaming-only client. Used as fallback for loading
      *       audio stream formats during playback.</li>
      * </ul>
@@ -330,7 +329,7 @@ public enum AudioSource
                 new AndroidVr(metadataOnly), // metadata loading (non-embedded, non-OAuth)
                 new MWeb(metadataOnly),      // metadata loading (non-embedded, non-OAuth)
                 new Web(metadataOnly),       // metadata loading (non-embedded, non-OAuth)
-                new TvHtml5Embedded(),       // Fallback: loading + primary streaming (OAuth)
+                new TvHtml5Simply(),       // Fallback: loading + primary streaming (OAuth)
                 new Tv()                     // Fallback: streaming only (OAuth)
             };
         }
